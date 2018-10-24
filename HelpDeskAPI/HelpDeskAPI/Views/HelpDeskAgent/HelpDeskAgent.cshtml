@@ -1,0 +1,151 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>HelpDeskAgent</title>
+    <link href="../../Scripts/bootstrap.min.css" rel="stylesheet" />
+    <script src="../../Scripts/jquery-3.3.1.min.js"></script>
+    <script src="../../Scripts/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            getItemList();
+        });
+
+        var WorkItem = {
+            id: 0,
+            title: "",
+            status: "",
+            createdDate: "",
+            completedDate: "",
+        }
+
+        // Get all Employees to display
+        function getItemList() {
+            // Call Web API to get a list of Employees
+            $.ajax({
+                url: '/api/WorkItems/',
+                type: 'GET',
+                dataType: 'json',
+                success: function (items) {
+                    itemListSuccess(items);
+                },
+                error: function (request, message, error) {
+                    handleException(request, message, error);
+                }
+            });
+        }
+
+        // Display all Employees returned from Web API call
+        function itemListSuccess(items) {
+            // Iterate over the collection of data
+            $("#itemTable tbody").remove();
+            $.each(items, function (index, item) {
+                // Add a row to the employee table
+                itemAddRow(item);
+            });
+        }
+
+        // Add employee row to <table>
+        function itemAddRow(item) {
+            // First check if a <tbody> tag exists, add one if not
+            if ($("#itemTable tbody").length == 0) {
+                $("#itemTable").append("<tbody></tbody>");
+            }
+
+            // Append row to <table>
+            $("#itemTable tbody").append(
+                itemBuildTableRow(item));
+        }
+
+        // Build a <tr> for a row of table data
+        function itemBuildTableRow(item) {
+            var items =
+                "<tr>" +
+                "<td>" + item.Id + "</td>"
+                + "<td>" + item.Title + "</td>"
+                + "<td>" + item.Status + "</td>"
+                + "<td>" + item.CreatedDate + "</td>"
+                + "<td>" + item.CompletedDate + "</td>"
+                + "</tr>";
+            return items;
+        }
+
+
+
+
+        // Handle exceptions from AJAX calls
+        function handleException(request, message, error) {
+            var msg = "";
+            msg += "Code: " + request.status + "\n";
+            msg += "Text: " + request.statusText + "\n";
+            if (request.responseJSON != null) {
+                msg += "Message" + request.responseJSON.Message + "\n";
+            }
+
+            alert(msg);
+        }
+
+        function onAddItem(item) {
+            var options = {};
+            options.url = "/api/WorkItems/";
+            options.type = "POST";
+            var obj = WorkItem;
+            obj.title = $("#title").val();
+            obj.status = $("#status").val();
+            obj.createdDate = $("#createdDate").val();
+            obj.completedDate = $("#completedDate").val();
+
+            console.dir(obj);
+            options.data = JSON.stringify(obj);
+            options.contentType = "application/json";
+            options.dataType = "html";
+
+            options.success = function (msg) {
+                getItemList();
+                $("#msg").html(msg);
+            },
+                options.error = function () {
+                    $("#msg").html("Error while calling the Web API!");
+                };
+            $.ajax(options);
+        }  
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h3>HELP DESK AGENT</h3>
+        <form>
+            <table id="itemTable" style="border: 1px solid #999" cellpadding="1">
+                <thead>
+                    <tr>
+                        <td>Id </td>
+                        <td> Title </td>
+                        <td> Status </td>
+                        <td> Created Date </td>
+                        <td> Completed Date </td>
+                        <td> </td>
+                    </tr>
+                    <tr>
+                        <td id="id"></td>
+                        
+
+                        <td><input id="title" type="text" /></td>
+                        <td><input id="status" type="text" /></td>
+                        <td><input id="createdDate" type="text" /></td>
+                        <td><input id="completedDate" type="text" /></td>
+
+                        <td><input type="button" id="btnAdd" value="AddNew" onclick='onAddItem(this)' /></td>
+</thead>
+            </table>
+            <br />
+            <div id="msg"></div>
+        </form>
+    </div>
+</body>
+</html>
