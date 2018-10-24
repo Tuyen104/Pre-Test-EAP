@@ -17,10 +17,10 @@ namespace HelpDeskAPI.Models
     {
         public int Id { get; set; }
         [Required]
-        [MinLength(50)]
+        [MaxLength(50)]
         public string Title { get; set; }
         [Required]
-        [MinLength(30)]
+        [MaxLength(30)]
         public string Status { get; set; }
         [Required]
         [DataType(DataType.Date)]

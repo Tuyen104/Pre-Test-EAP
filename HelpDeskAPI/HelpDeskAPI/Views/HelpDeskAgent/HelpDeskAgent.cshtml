@@ -18,11 +18,11 @@
         });
 
         var WorkItem = {
-            id: 0,
-            title: "",
-            status: "",
-            createdDate: "",
-            completedDate: "",
+            Id: 0,
+            Title: "",
+            Status: "",
+            CreatedDate: "",
+            CompletedDate: "",
         }
 
         // Get all Employees to display
@@ -95,11 +95,12 @@
             var options = {};
             options.url = "/api/WorkItems/";
             options.type = "POST";
+
             var obj = WorkItem;
-            obj.title = $("#title").val();
-            obj.status = $("#status").val();
-            obj.createdDate = $("#createdDate").val();
-            obj.completedDate = $("#completedDate").val();
+            obj.Title = $("#title").val();
+            obj.Status = $("#status").val();
+            obj.CreatedDate = $("#createdDate").val();
+            obj.CompletedDate = $("#completedDate").val();
 
             console.dir(obj);
             options.data = JSON.stringify(obj);
