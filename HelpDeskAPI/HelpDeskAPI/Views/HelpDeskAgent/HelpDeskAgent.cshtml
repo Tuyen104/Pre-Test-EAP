@@ -103,7 +103,7 @@
 
             console.dir(obj);
             options.data = JSON.stringify(obj);
-            options.contentType = "application/json";
+            options.contentType = "application/json;charset=utf-8";
             options.dataType = "html";
 
             options.success = function (msg) {
@@ -114,7 +114,7 @@
                     $("#msg").html("Error while calling the Web API!");
                 };
             $.ajax(options);
-        }  
+        }
     </script>
 </head>
 <body>
